@@ -1,0 +1,37 @@
+name = "fast-video-processor"
+main = "scripts/cloudflare-video-worker.js"
+compatibility_date = "2023-11-02"
+usage_model = "bundled"
+
+# Custom domain configuration
+routes = [
+  { pattern = "video.motionmavericks.com.au", custom_domain = true }
+]
+
+# KV Namespace for cache and tracking
+[[kv_namespaces]]
+binding = "KV_NAMESPACE"
+id = "b10c6ec07b994142a7e703abe994a2b4"
+
+# R2 bucket for storage
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "mavericks"
+preview_bucket_name = "mavericks-preview"
+
+# Environment variables
+[vars]
+API_BASE_URL = "https://app.motionmavericks.com.au/api"
+R2_ENDPOINT = "https://f8bb59f64efa1103bf1d76951a1cd323.r2.cloudflarestorage.com"
+R2_BUCKET_NAME = "mavericks"
+
+# Cron triggers for maintenance
+[triggers]
+crons = ["0 0 * * *"]
+
+# Necessary secrets that need to be set:
+# wrangler secret put API_SECRET
+# wrangler secret put DO_API_TOKEN
+# wrangler secret put R2_ACCESS_KEY_ID 
+# wrangler secret put R2_SECRET_ACCESS_KEY
+# wrangler secret put DO_SSH_KEY_IDS 

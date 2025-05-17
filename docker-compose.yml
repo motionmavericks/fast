@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  ubuntu-desktop:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Explicitly set the platform to avoid Windows compatibility issues
+      platforms:
+        - "linux/amd64"
+    container_name: ubuntu-desktop
+    ports:
+      # SSH port
+      - "2222:22"
+      # VNC ports
+      - "5900:5900"
+      - "5901:5901"
+      # Splashtop ports
+      - "6783:6783"
+      - "6784:6784"
+      - "6785:6785"
+    volumes:
+      # Mount host directories - customize these paths as needed
+      - C:/Data:/mnt/data
+      - C:/Media:/mnt/media
+      # X11 socket for display
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    environment:
+      - DISPLAY=:0
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    # Enable privileged mode for GPU access
+    privileged: true
+    # Use host network for better performance (optional)
+    # network_mode: "host"
+    # Use the NVIDIA runtime
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped 

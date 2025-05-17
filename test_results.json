@@ -1,0 +1,49 @@
+{
+  "tests": [
+    {
+      "name": "Worker Health Check",
+      "passed": true,
+      "status": 200,
+      "data": {
+        "status": "healthy"
+      }
+    },
+    {
+      "name": "Upload Test Video",
+      "passed": true,
+      "data": {
+        "fileId": "test-1747449701657",
+        "videoUrl": "https://test-cdn.example.com/videos/test-1747449701657.mp4"
+      }
+    },
+    {
+      "name": "Create Transcoding Job",
+      "passed": false,
+      "status": 500,
+      "data": {
+        "error": "Buffer is not defined"
+      }
+    },
+    {
+      "name": "Lifecycle Management",
+      "passed": true,
+      "status": 200,
+      "data": {
+        "success": true,
+        "stats": {
+          "scanned": 0,
+          "deleted": 0,
+          "retained": 0,
+          "errors": 0
+        },
+        "deletedObjects": [],
+        "errors": []
+      }
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "passed": 3,
+    "failed": 1
+  }
+}

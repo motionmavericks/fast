@@ -1,0 +1,37 @@
+name = "fast-video-processor"
+main = "cloudflare-video-worker.js"
+compatibility_date = "2023-11-02"
+usage_model = "bundled"
+
+# Custom domain configuration
+routes = [
+  { pattern = "video.motionmavericks.com.au", custom_domain = true }
+]
+
+# KV Namespace for tracking jobs and file information
+[[kv_namespaces]]
+binding = "KV_NAMESPACE"
+id = "your-kv-namespace-id" # Replace with your KV namespace ID from Cloudflare
+
+# R2 bucket for proxy storage
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "mavericks-fast" # Using the bucket name for Fast
+preview_bucket_name = "mavericks-fast-preview" # Optional preview bucket
+
+# Environment variables
+[vars]
+API_BASE_URL = "https://app.motionmavericks.com.au/api"
+R2_ENDPOINT = "https://<account-id>.r2.cloudflarestorage.com"
+R2_BUCKET_NAME = "mavericks-fast"
+
+# Cron triggers for maintenance
+[triggers]
+crons = ["0 0 * * *"] # Daily at midnight UTC
+
+# Required secrets:
+# API_SECRET - API authentication token
+# DO_API_TOKEN - DigitalOcean API token
+# R2_ACCESS_KEY_ID - R2 access key
+# R2_SECRET_ACCESS_KEY - R2 secret key
+# DO_SSH_KEY_IDS - Comma-separated SSH key IDs for droplet access 

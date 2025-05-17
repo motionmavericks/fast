@@ -1,0 +1,147 @@
+# Cursor Rules for Motion Mavericks Fast Project
+
+## File Paths & Operations:
+- When performing file operations (read, write, create directory, edit), if relative paths cause errors, default to using full absolute paths based on the project root: `C:/Projects/fast/`.
+- Before writing a file into a new subdirectory (especially for API routes like `app/api/feature/action/route.ts`), explicitly create the full subdirectory path first if it might not exist.
+- Confirm successful directory creation before proceeding with file writing within it.
+
+## Dependency Management:
+- If new packages or libraries are introduced or required by the code being written (e.g., `bcryptjs`, `jsonwebtoken`, `nanoid`, `@aws-sdk/client-s3`, `@sendgrid/mail`, `resumablejs`, `mongoose`, `mongodb`, `@tabler/icons-react`), always propose the necessary terminal commands (e.g., `npm install <package>`) to install them and their TypeScript types (e.g., `npm install -D @types/<package>`). Do not assume they are already installed.
+- Before writing components that use specific dependencies, always verify that these dependencies are installed via package.json or install them as needed.
+
+## UI Component Library Usage:
+- Prioritize using components from Mantine Core (`@mantine/core`) and Mantine UI (`@mantine/ui`) for all user interface elements.
+- Actively look for opportunities to repurpose or adapt prebuilt Mantine UI components to accelerate development and maintain UI consistency.
+- Adhere to a dark mode theme as per the project requirements.
+- Always properly import all Mantine components being used in a file (e.g., `import { Button, Stack } from '@mantine/core'`).
+- Use the modern Next.js pattern for Link components: `<Component component={Link} href="/path">content</Component>` instead of wrapping with `<Link legacyBehavior>` tags.
+
+## Documentation:
+- After making significant changes, adding new features, or altering the architecture (e.g., new API routes, database models, core logic changes), always remember to update the relevant documentation files located in the `docs/` directory (`implementation_plan.md` and `context_and_architecture.md`).
+- Ensure documentation reflects the current state of the Next.js 15+ TypeScript application structure.
+
+## General Reminders:
+- The project uses Next.js 15+ with TypeScript and the App Router.
+- All backend logic is handled via Next.js API Routes.
+- Configuration for services (DB, Storage, Email) is intended to be set up via an initial setup flow and then managed as environment variables.
+- Large file uploads are handled using resumable.js for chunked uploads.
+- Storage integration uses AWS S3 SDK for Wasabi compatibility.
+- Email notifications are handled through SendGrid.
+- MongoDB connection should be configured via the setup wizard, without hardcoded defaults.
+- JWT authentication requires a `JWT_SECRET` environment variable for token signing and verification.
+- Admin creation can be done through the setup wizard, init-admin script, or direct create-admin script.
+
+## Database Integration:
+- Never hardcode MongoDB connection strings in the codebase.
+- Always prompt users to enter their own MongoDB connection string through the setup wizard.
+- Test MongoDB connections before saving configurations.
+- Handle database connection errors gracefully with clear error messages.
+- Use mongoose for database operations and model definitions.
+
+## Error Handling:
+- Implement proper error handling for all API endpoints.
+- Show user-friendly error messages for common issues.
+- Log detailed error information to the console for debugging.
+- Provide fallback UI for when services are unavailable.
+- Include clear instructions for resolving common errors.
+
+## Security Practices:
+- Validate all user inputs on both client and server.
+- Use JWT for authentication with proper expiration and refresh logic.
+- Store sensitive information (API keys, passwords) only in environment variables.
+- Hash passwords using bcrypt before storing them.
+- Implement proper authorization checks for all API endpoints.
+- Use HTTPS for all connections in production.
+
+## .cursorrules File Maintenance:
+- This `.cursorrules` file should be actively maintained and updated throughout the project.
+- If user intervention or guidance corrects a misunderstanding or a repeated error, consider if a new rule or clarification can be added here to prevent future occurrences.
+- Periodically review these rules to ensure they are still relevant and not outdated. Remove or update rules that no longer apply or have been superseded by new project decisions or architectural changes.
+- When adding new rules, be specific and provide actionable guidance.
+
+## Code Quality & Completeness:
+- Avoid using placeholder comments (e.g., `// TODO:`, `// Placeholder:`) or incomplete logic.
+- Strive to write complete, correct, and production-ready code for each feature or change in a single step.
+- If a feature requires a new utility, model, or API endpoint, create it fully before integrating it.
+- Ensure all necessary imports, error handling, and type definitions are included.
+- Adhere to the principle of "code it once, code it right."
+
+## Database Connection Handling:
+- MongoDB connections are cached across hot reloads in development to prevent connection pooling issues
+- The "Using cached database connection" message is normal/expected behavior and doesn't indicate a problem
+- Connection strings must be properly formatted in .env.local without line breaks
+- Connection errors should be properly reported to users with clear instructions
+
+## Route Parameters in Next.js App Router:
+- All route parameters in dynamic routes MUST be awaited before use (e.g., `const { linkId } = await params;`)
+- Route handlers should properly handle both direct params and query strings
+- Dynamic route segments should account for the possibility of arrays from Next.js (use Array.isArray check)
+- Add logging for route parameters in development to aid debugging
+
+## API Route Error Handling:
+- All API routes must return proper status codes and error messages in JSON format
+- Client-side error handling should display meaningful errors to users
+- All API operations should be properly logged for debugging purposes
+- Failed database operations should provide clear context for debugging
+
+## MongoDB ObjectID vs Custom IDs:
+- Be careful not to confuse MongoDB's internal `_id` field with custom ID fields like `linkId`
+- UI components must use the correct ID field when making API calls (linkId for links)
+- All database operations should clearly document which ID field they're using
+- Always validate IDs before database operations
+
+## Link Operations:
+- Use `linkId` (not `_id`) for all link operations (toggle, delete, validate)
+- Link validation must include checks for expired and inactive links
+- Include proper logging for link operations to aid debugging
+- Client operations should enforce consistent parameter passing
+
+## Security & Authentication:
+- Properly validate all input parameters
+- Implement proper authorization in API routes
+- Use JWT for admin authentication
+- Keep environment variables secure
+
+## UI Components:
+- All Mantine components must be properly imported at the top of the file
+- Use proper tooltips and notifications for user feedback
+- Ensure consistent error handling across the interface
+- Provide clear progress indicators for operations
+
+## Code Quality:
+- Use explicit typing with TypeScript
+- Include comprehensive error handling
+- Use consistent coding patterns
+- Always verify parameter types before operations
+
+## Frame.io Integration:
+- Configure Frame.io API credentials via environment variables (FRAMEIO_CLIENT_ID, FRAMEIO_CLIENT_SECRET, etc.)
+- Frame.io assetId and other identifiers must be stored in the database for tracking uploads
+- Use appropriate error handling for Frame.io API calls
+- Create webhooks to handle Frame.io events such as upload completion and proxy generation
+- Proxy URLs should be cached in R2 to reduce dependency on Frame.io for playback
+- Store all metadata about uploads including duration, resolution, and available proxy qualities
+- Implement adaptive playback with quality selection based on user connection
+
+## Cloudflare R2 Storage:
+- Use R2 for storing video proxies and frequently accessed content
+- Configure R2 with proper credentials (R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, etc.)
+- Implement intelligent caching strategies to reduce costs and improve performance
+- Use connection pooling and keep-alive for better throughput
+- Add lifecycle management for infrequently accessed files
+- Set proper CORS headers for browser playback
+
+## LucidLink Storage:
+- Configure LucidLink integration with proper base path (LUCIDLINK_BASE_PATH)
+- Store original high-quality files in LucidLink for post-production access
+- Organize files by client/project for easy discovery
+- Implement proper error handling for file system operations
+- Check for LucidLink availability before attempting operations
+
+## Adaptive Video Playback:
+- Implement adaptive quality selection based on client connection speed and device capabilities
+- Store multiple quality proxies (360p, 540p, 720p, 1080p, 2160p) when available
+- Provide user interface for manual quality selection
+- Use connection information APIs when available (navigator.connection)
+- Default to medium quality (720p) when connection information isn't available
+- Cache video player state to preserve position during quality changes

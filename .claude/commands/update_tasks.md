@@ -1,0 +1,1 @@
+Update the current project status in /.claude/commands/work_task.md

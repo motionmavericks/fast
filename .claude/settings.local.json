@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx @smithery/cli list:*)",
+      "Bash(claude --mcp-debug init)",
+      "Bash(ls:*)",
+      "Bash(claude /help)",
+      "Bash(npx @smithery/cli@latest status:*)",
+      "Bash(npx --version)",
+      "Bash(npx:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(claude mcp:*)",
+      "Bash(chmod:*)",
+      "Bash(bash:*)",
+      "Bash(dos2unix:*)",
+      "Bash(sed:*)",
+      "Bash(claude --mcp-debug)"
+    ],
+    "deny": []
+  }
+}
